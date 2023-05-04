@@ -65,9 +65,12 @@ def download_minifiles(mini_id, headers):
             response = requests.get(url, headers=headers)
             if response.status_code == 200:
                 os.makedirs(os.path.join("downloaded_files", mini_name), exist_ok=True)
-                with open(os.path.join("downloaded_files", mini_name, minifile['fileName']), "wb") as f:
-                    f.write(response.content)
-                print(f"File {minifile['fileName']} for mini ID {mini_id} downloaded successfully.")
+                try:
+                    with open(os.path.join("downloaded_files", mini_name, minifile['fileName']), "wb") as f:
+                        f.write(response.content)
+                        print(f"File {minifile['fileName']} for mini ID {mini_id} downloaded successfully.")
+                except:
+                    print("Upsi")
             else:
                 print(
                     f"Failed to download file {minifile['fileName']} for mini ID {mini_id}. Status code: {response.status_code}")
@@ -77,22 +80,21 @@ def download_minifiles(mini_id, headers):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Download files from PrintableHeroes API')
-    parser.add_argument('-t', '--tier', type=int, required=True, help='the tier of the files to download')
+    parser.add_argument('-t', '--tier', type=int, required=True, help='the maximum tier of the files to download')
     parser.add_argument('-a', '--authorization', type=str, required=True, help='the authorization bearer')
     args = parser.parse_args()
 
     headers = {"Authorization": f"Bearer {args.authorization}"}
-    minis = range(105, 765)
-    tier = args.tier
+    # Set the tier of minifiles to download
+    TIER = args.tier
     problematic = []
     # Replace the authorization bearer with your own
     headers = {"Authorization": f"Bearer {args.authorization}"}
 
     # Set the range of mini IDs to download
-    MINI_RANGE = range(1, 765)
+    MINI_RANGE = range(719, 790)
 
-    # Set the tier of minifiles to download
-    TIER = 3
+
 
     # Download minifiles
     for mini_id in MINI_RANGE:
